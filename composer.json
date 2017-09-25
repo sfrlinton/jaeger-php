@@ -28,7 +28,8 @@
   ],
   "autoload": {
     "psr-4": {
-      "JaegerPhp\\": "src/JaegerPhp/"
+      "JaegerPhp\\": "src/",
+      "JaegerPhpTest\\": "tests/"
     }
   }
 }
