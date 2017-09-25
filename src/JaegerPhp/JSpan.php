@@ -136,8 +136,8 @@ class JSpan implements Span
 
     public function isRPC()
     {
-        if ($this->spanKind == 'server'
-            || $this->spanKind == 'client') {
+        if ($this->spanKind === 'server'
+            || $this->spanKind === 'client') {
             return true;
         }
         return false;
@@ -146,7 +146,7 @@ class JSpan implements Span
 
     public function isRPClient()
     {
-        if ($this->spanKind == 'client') {
+        if ($this->spanKind === 'client') {
             return true;
         }
         return false;

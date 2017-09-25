@@ -1,7 +1,5 @@
 <?php
 
-require_once '../../autoload.php';
-
 use JaegerPhp\Sampler\ConstSampler;
 use JaegerPhp\Sampler\ProbabilisticSampler;
 
