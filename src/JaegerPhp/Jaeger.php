@@ -2,7 +2,6 @@
 
 namespace JaegerPhp;
 
-use Guzzle\Common\Exception\InvalidArgumentException;
 use JaegerPhp\Sampler\Sampler;
 use OpenTracing\Reference;
 use OpenTracing\SpanContext;

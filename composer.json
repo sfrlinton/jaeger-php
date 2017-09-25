@@ -20,11 +20,15 @@
     {
       "name": "jukylin",
       "email": "742161455@qq.com"
+    },
+    {
+      "name": "mland",
+      "email": "mland@sparefoot.com"
     }
   ],
   "autoload": {
     "psr-4": {
-      "JaegerPhp\\": "src/"
+      "JaegerPhp\\": "src/JaegerPhp/"
     }
   }
 }
