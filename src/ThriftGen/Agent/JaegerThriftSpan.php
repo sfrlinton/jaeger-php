@@ -8,8 +8,6 @@ use JaegerPhp\JSpan;
 
 class JaegerThriftSpan
 {
-
-
     public function buildJaegerProcessThrift(Jaeger $jaeger)
     {
         $tags = [];
@@ -32,42 +30,38 @@ class JaegerThriftSpan
             'tags' => $thriftTags,
         ];
 
-
         return $processThrift;
     }
 
     public function buildJaegerSpanThrift(JSpan $Jspan)
     {
-
-        $spContext = $Jspan->spanContext;
+        $spContext = $Jspan->getContext();
         $span = [
-            'traceIdLow' => hexdec($spContext->traceId),
+            'traceIdLow' => hexdec($spContext->getTraceId()),
             'traceIdHigh' => 0,
-            'spanId' => hexdec($spContext->spanId),
-            'parentSpanId' => hexdec($spContext->parentId),
+            'spanId' => hexdec($spContext->getSpanId()),
+            'parentSpanId' => hexdec($spContext->getParentId()),
             'operationName' => $Jspan->getOperationName(),
-            'flags' => intval($spContext->flags),
-            'startTime' => $Jspan->startTime,
-            'duration' => $Jspan->duration,
-            'tags' => $this->buildTags($Jspan->tags),
-            'logs' => $this->buildLogs($Jspan->logs),
+            'flags' => intval($spContext->getFlags()),
+            'startTime' => $Jspan->getStartTime(),
+            'duration' => $Jspan->getDuration(),
+            'tags' => $this->buildTags($Jspan->getTags()),
+            'logs' => $this->buildLogs($Jspan->getLogs()),
         ];
 
-        if ($spContext->parentId != 0) {
+        if ($spContext->getParentId() != 0) {
             $span['references'] = [
                 [
                     'refType' => 1,
-                    'traceIdLow' => hexdec($spContext->traceId),
+                    'traceIdLow' => hexdec($spContext->getTraceId()),
                     'traceIdHigh' => 0,
-                    'spanId' => hexdec($spContext->parentId),
+                    'spanId' => hexdec($spContext->getParentId()),
                 ],
             ];
         }
 
-
         return $span;
     }
-
 
     private function buildTags($tags)
     {
@@ -81,7 +75,6 @@ class JaegerThriftSpan
 
         return $resultTags;
     }
-
 
     private function buildLogs($logs)
     {

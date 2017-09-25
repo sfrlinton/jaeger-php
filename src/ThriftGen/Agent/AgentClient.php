@@ -32,7 +32,6 @@ class AgentClient
         return ['len' => $batchLen, 'thriftStr' => $batchThriftStr];
     }
 
-
     public function handleBatch($batch)
     {
         self::$tptl->writeFieldBegin("batch", TType::STRUCT, 1);
@@ -46,7 +45,6 @@ class AgentClient
 
         self::$tptl->writeFieldEnd();
     }
-
 
     public function handleThriftSpans($thriftSpans)
     {
@@ -62,7 +60,6 @@ class AgentClient
         self::$tptl->writeListEnd();
         self::$tptl->writeFieldEnd();
     }
-
 
     public function handleThriftProcess($thriftProcess)
     {

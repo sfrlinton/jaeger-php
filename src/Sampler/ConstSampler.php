@@ -13,7 +13,6 @@ use JaegerPhp\Helper;
 
 class ConstSampler implements Sampler
 {
-
     private $decision = '';
 
     private $tags = [];
@@ -30,12 +29,10 @@ class ConstSampler implements Sampler
         return $this->decision;
     }
 
-
     public function Close()
     {
         //nothing to do
     }
-
 
     public function getTags()
     {

@@ -7,23 +7,22 @@ use OpenTracing\SpanContext;
 
 class JSpan implements Span
 {
-
     private $operationName = '';
 
-    public $startTime = '';
+    protected $startTime = '';
 
-    public $finishTime = '';
+    protected $finishTime = '';
 
-    public $spanKind = '';
+    protected $spanKind = '';
 
-    public $spanContext = null;
+    /** @var null|JSpanContext  */
+    protected $spanContext = null;
 
-    public $duration = 0;
+    protected $duration = 0;
 
-    public $logs = [];
+    protected $logs = [];
 
-    public $tags = [];
-
+    protected $tags = [];
 
     public function __construct($operationName, SpanContext $spanContext)
     {
@@ -42,7 +41,7 @@ class JSpan implements Span
     }
 
     /**
-     * @return SpanContext
+     * @return JSpanContext
      */
     public function getContext()
     {
@@ -53,7 +52,6 @@ class JSpan implements Span
      * @param float|int|\DateTimeInterface|null $finishTime if passing float or int
      * it should represent the timestamp (including as many decimal places as you need)
      * @param array $logRecords
-     * @return mixed
      */
     public function finish($finishTime = null, array $logRecords = [])
     {
@@ -119,7 +117,6 @@ class JSpan implements Span
 
     }
 
-
     public function setIsServer()
     {
         $this->spanKind = 'server';
@@ -151,4 +148,61 @@ class JSpan implements Span
         }
         return false;
     }
+
+    /**
+     * @return int|string
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinishTime()
+    {
+        return $this->finishTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpanKind()
+    {
+        return $this->spanKind;
+    }
+
+    /**
+     * @return JSpanContext|null
+     */
+    public function getSpanContext()
+    {
+        return $this->spanContext;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
 }

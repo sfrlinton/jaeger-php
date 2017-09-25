@@ -8,25 +8,25 @@ class JSpanContext implements SpanContext
 {
     // traceID represents globally unique ID of the trace.
     // Usually generated as a random number.
-    public $traceId;
+    protected $traceId;
 
     // spanID represents span ID that must be unique within its trace,
     // but does not have to be globally unique.
-    public $spanId;
+    protected $spanId;
 
     // parentID refers to the ID of the parent span.
     // Should be 0 if the current span is a root span.
-    public $parentId;
+    protected $parentId;
 
     // flags is a bitmap containing such bits as 'sampled' and 'debug'.
-    public $flags;
+    protected $flags;
 
     // Distributed Context baggage. The is a snapshot in time.
-    public $baggage;
+    protected $baggage;
 
     // debugID can be set to some correlation ID when the context is being
     // extracted from a TextMap carrier.
-    public $debugId;
+    protected $debugId;
 
 
     public function __construct($traceId, $spanId, $parentId, $flags, $baggage = null, $debugId = 0, $obj = null)
@@ -39,7 +39,6 @@ class JSpanContext implements SpanContext
         $this->debugId = $debugId;
     }
 
-
 //    public static function getInstance($traceId, $spanId, $parentId, $flags, $baggage = null, $debugId = 0){
 //        return new self($traceId, $spanId, $parentId, $flags, $baggage, $debugId);
 //    }
@@ -48,7 +47,6 @@ class JSpanContext implements SpanContext
     {
 
     }
-
 
     public function withBaggageItem($key, $value)
     {
@@ -60,12 +58,10 @@ class JSpanContext implements SpanContext
         // TODO: Implement getIterator() method.
     }
 
-
     public function buildString()
     {
         return $this->traceId . ':' . $this->spanId . ':' . $this->parentId . ':' . $this->flags;
     }
-
 
     /**
      * 是否取样
@@ -75,4 +71,53 @@ class JSpanContext implements SpanContext
     {
         return $this->flags;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTraceId()
+    {
+        return $this->traceId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSpanId()
+    {
+        return $this->spanId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlags()
+    {
+        return $this->flags;
+    }
+
+    /**
+     * @return null
+     */
+    public function getBaggage()
+    {
+        return $this->baggage;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDebugId()
+    {
+        return $this->debugId;
+    }
+
 }

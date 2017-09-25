@@ -1,11 +1,11 @@
 <?php
+namespace JaegerPhpTest;
 
 use JaegerPhp\Config;
 use OpenTracing\NoopTracer;
 
-class TestConfig extends PHPUnit_Framework_TestCase
+class TestConfig extends \PHPUnit_Framework_TestCase
 {
-
     public function testSetDisabled()
     {
         $config = Config::getInstance();
@@ -16,7 +16,6 @@ class TestConfig extends PHPUnit_Framework_TestCase
 
     public function testNoopTracer()
     {
-
         $config = Config::getInstance();
         $config->setDisabled(true);
         $trace = $config->initTrace('test');

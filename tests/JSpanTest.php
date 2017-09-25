@@ -1,12 +1,11 @@
 <?php
-
+namespace JaegerPhpTest;
 
 use OpenTracing\NoopSpanContext;
 use JaegerPhp\JSpan;
 
-class TestJSpan extends PHPUnit_Framework_TestCase
+class TestJSpan extends \PHPUnit_Framework_TestCase
 {
-
     public function testOverwriteOperationName()
     {
         $span = new JSpan('test1', new NoopSpanContext());
@@ -18,7 +17,7 @@ class TestJSpan extends PHPUnit_Framework_TestCase
     {
         $span = new JSpan('test1', new NoopSpanContext());
         $span->setTags(['test' => 'test']);
-        $this->assertTrue((isset($span->tags['test']) && $span->tags['test'] == 'test'));
+        $this->assertTrue((isset($span->getTags()['test']) && $span->getTags()['test'] == 'test'));
     }
 
     public function testFinish()
@@ -26,6 +25,6 @@ class TestJSpan extends PHPUnit_Framework_TestCase
         $span = new JSpan('test1', new NoopSpanContext());
         $span->setTags(['test' => 'test']);
         $span->finish();
-        $this->assertTrue(!empty($span->finishTime) && !empty($span->duration));
+        $this->assertTrue(!empty($span->getFinishTime()) && !empty($span->getDuration()));
     }
 }

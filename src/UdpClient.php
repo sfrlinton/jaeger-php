@@ -9,10 +9,8 @@ use JaegerPhp\ThriftGen\Agent\AgentClient;
  * Class UdpClient
  * @package JaegerPhp
  */
-
 class UdpClient
 {
-
     private $host = '';
 
     private $post = '';
@@ -21,7 +19,6 @@ class UdpClient
     {
         list($this->host, $this->post) = explode(":", $hostPost);
     }
-
 
     /**
      * 发送数据
@@ -39,8 +36,9 @@ class UdpClient
             socket_close($sock);
 
             return true;
-        } else {
-            return false;
         }
+
+        return false;
+
     }
 }

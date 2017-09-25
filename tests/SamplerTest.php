@@ -1,9 +1,10 @@
 <?php
+namespace JaegerPhpTest;
 
 use JaegerPhp\Sampler\ConstSampler;
 use JaegerPhp\Sampler\ProbabilisticSampler;
 
-class TestSampler extends PHPUnit_Framework_TestCase
+class TestSampler extends \PHPUnit_Framework_TestCase
 {
 
     public function testConstSampler()
@@ -11,7 +12,6 @@ class TestSampler extends PHPUnit_Framework_TestCase
         $sample = new ConstSampler(true);
         $this->assertTrue($sample->IsSampled() == true);
     }
-
 
     public function testProbabilisticSampler()
     {
