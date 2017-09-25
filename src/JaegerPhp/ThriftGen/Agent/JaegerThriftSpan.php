@@ -6,18 +6,20 @@ use JaegerPhp\Jaeger;
 use JaegerPhp\JSpan;
 
 
-class JaegerThriftSpan{
+class JaegerThriftSpan
+{
 
 
-    public function buildJaegerProcessThrift(Jaeger $jaeger){
+    public function buildJaegerProcessThrift(Jaeger $jaeger)
+    {
         $tags = [];
         $ip = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '127.0.0.1';
-        if($ip){
+        if ($ip) {
             $tags['ip'] = $ip;
         }
 
         $port = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : '';
-        if($port){
+        if ($port) {
             $tags['port'] = $port;
         }
         $tags = array_merge($tags, $jaeger->tags);
@@ -34,7 +36,8 @@ class JaegerThriftSpan{
         return $processThrift;
     }
 
-    public function buildJaegerSpanThrift(JSpan $Jspan){
+    public function buildJaegerSpanThrift(JSpan $Jspan)
+    {
 
         $spContext = $Jspan->spanContext;
         $span = [
@@ -66,11 +69,11 @@ class JaegerThriftSpan{
     }
 
 
-
-    private function buildTags($tags){
+    private function buildTags($tags)
+    {
 
         $resultTags = [];
-        if($tags){
+        if ($tags) {
             $tagsObj = Tags::getInstance();
             $tagsObj->setTags($tags);
             $resultTags = $tagsObj->buildTags();
@@ -80,11 +83,12 @@ class JaegerThriftSpan{
     }
 
 
-    private function buildLogs($logs){
+    private function buildLogs($logs)
+    {
         $resultLogs = [];
-        if($logs){
+        if ($logs) {
             $tagsObj = Tags::getInstance();
-            foreach($logs as $log){
+            foreach ($logs as $log) {
                 $tagsObj->setTags($log['fields']);
                 $fields = $tagsObj->buildTags();
                 $resultLogs[] = [

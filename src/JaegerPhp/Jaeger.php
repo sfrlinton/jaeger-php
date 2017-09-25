@@ -12,7 +12,8 @@ use OpenTracing\Propagator;
 use OpenTracing\Tracer;
 use JaegerPhp\Reporter\Reporter;
 
-class Jaeger implements Tracer{
+class Jaeger implements Tracer
+{
 
     private $reporter = null;
 
@@ -36,22 +37,24 @@ class Jaeger implements Tracer{
 
     public $spanThrifts = [];
 
-    public function __construct($serverName = '', Reporter $reporter, Sampler $sampler){
+    public function __construct($serverName = '', Reporter $reporter, Sampler $sampler)
+    {
 
         $this->reporter = $reporter;
 
         $this->sampler = $sampler;
         $this->setTags($this->sampler->getTags());
 
-        if($serverName == '') {
+        if ($serverName == '') {
             $this->serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'unknow server';
-        }else{
+        } else {
             $this->serverName = $serverName;
         }
     }
 
 
-    public function setTags(array $tags = []){
+    public function setTags(array $tags = [])
+    {
         $this->tags = array_merge($this->tags, $tags);
     }
 
@@ -66,34 +69,35 @@ class Jaeger implements Tracer{
      */
     public function startSpan($operationName, $parentReference = null
         , $startTimestamp = null, array $tags = []
-    ){
+    )
+    {
         if (!$parentReference instanceof Reference) {
-            throw new InvalidArgumentException();
+            throw new \InvalidArgumentException('Wrong Type, pass a Reference');
         }
 
         $parentSpan = null;
         $spanContext = $parentReference->getContext();
-        if($spanContext->traceId){
+        if ($spanContext->traceId) {
             $parentSpan = $spanContext;
         }
 
-        if(!$parentSpan){
+        if (!$parentSpan) {
             $traceId = Helper::toHex(Helper::identifier());
             $spanId = Helper::toHex(Helper::identifier());
 
             $flags = $this->sampler->IsSampled();
             $newSpan = new JSpanContext($traceId, $spanId, 0, $flags, null, 0);
-        }else{
+        } else {
             $newSpan = new JSpanContext($parentSpan->traceId, Helper::toHex(Helper::identifier())
                 , $parentSpan->spanId, $parentSpan->flags, null, 0);
         }
 
         $span = new JSpan($operationName, $newSpan);
-        if(empty($tags)){
+        if (empty($tags)) {
             $span->setTags($tags);
         }
 
-        if($newSpan->isSampled() == 1) {
+        if ($newSpan->isSampled() == 1) {
             $this->spans[] = $span;
         }
 
@@ -101,7 +105,8 @@ class Jaeger implements Tracer{
     }
 
 
-    public function startSpanWithOptions($operationName, $options){
+    public function startSpanWithOptions($operationName, $options)
+    {
 
     }
 
@@ -112,11 +117,12 @@ class Jaeger implements Tracer{
      * @param int|string $format
      * @param Writer $carrier
      */
-    public function inject(SpanContext $spanContext, $format, Writer $carrier){
-        if($format == Propagator::TEXT_MAP){
+    public function inject(SpanContext $spanContext, $format, Writer $carrier)
+    {
+        if ($format == Propagator::TEXT_MAP) {
             $carrier->set(Helper::TracerStateHeaderName, $spanContext->buildString());
-        }else{
-            throw new Exception("not support format");
+        } else {
+            throw new \Exception("not support format");
         }
     }
 
@@ -126,28 +132,31 @@ class Jaeger implements Tracer{
      * @param int|string $format
      * @param Reader $carrier
      */
-    public function extract($format, Reader $carrier){
-        if($format == Propagator::TEXT_MAP){
+    public function extract($format, Reader $carrier)
+    {
+        if ($format == Propagator::TEXT_MAP) {
             $carrierInfo = $carrier->getIterator();
-            if(isset($carrierInfo[Helper::TracerStateHeaderName]) && $carrierInfo[Helper::TracerStateHeaderName]){
-                list($traceId, $spanId, $parentId,$flags) = explode(':', $carrierInfo[Helper::TracerStateHeaderName]);
+            if (isset($carrierInfo[Helper::TracerStateHeaderName]) && $carrierInfo[Helper::TracerStateHeaderName]) {
+                list($traceId, $spanId, $parentId, $flags) = explode(':', $carrierInfo[Helper::TracerStateHeaderName]);
                 return new JSpanContext($traceId, $spanId, $parentId, $flags, null, 0);
             }
 
             return new JSpanContext(0, 0, 0, 0, null, 0);
-        }else{
-            throw new Exception("not support format");
+        } else {
+            throw new \Exception("not support format");
         }
     }
 
 
-    public function getSpans(){
+    public function getSpans()
+    {
         return $this->spans;
     }
 
 
-    public function reportSpan(){
-        if(count($this->spans) > 0) {
+    public function reportSpan()
+    {
+        if (count($this->spans) > 0) {
             $this->reporter->report($this);
         }
     }
@@ -156,13 +165,11 @@ class Jaeger implements Tracer{
     /**
      * 结束,发送信息到jaeger
      */
-    public function flush(){
+    public function flush()
+    {
         $this->reportSpan();
         $this->reporter->close();
         Config::getInstance()->destroyTrace($this->serverName);
     }
 
 }
-
-
-?>

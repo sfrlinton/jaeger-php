@@ -8,17 +8,17 @@ use JaegerPhp\Transport\TransportUdp;
 use OpenTracing\NoopTracer;
 use JaegerPhp\Sampler\Sampler;
 use JaegerPhp\Sampler\ConstSampler;
+use OpenTracing\Tracer;
 
-class Config {
+class Config
+{
 
     private $transport = null;
 
     private $reporter = null;
 
     private $sampler = null;
-
-    private $tags = [];
-
+    /** @var Jaeger  */
     public static $trace = null;
 
     public static $span = null;
@@ -27,20 +27,21 @@ class Config {
 
     public static $disabled = false;
 
-    private function __construct(){
+    private function __construct()
+    {
 
     }
 
 
-    private function __clone(){
+    private function __clone()
+    {
 
     }
 
 
     public static function getInstance()
     {
-        if(! (self::$instance instanceof self) )
-        {
+        if (!(self::$instance instanceof self)) {
             self::$instance = new self();
         }
         return self::$instance;
@@ -54,30 +55,31 @@ class Config {
      * @return Jaeger|null
      * @throws \Exception
      */
-    public function initTrace($serverName, $agentHostPort = ''){
+    public function initTrace($serverName, $agentHostPort = '')
+    {
 
-        if(self::$disabled){
+        if (self::$disabled) {
             return NoopTracer::create();
         }
 
-        if($serverName == ''){
-            throw new Exception("serverName require");
+        if ($serverName == '') {
+            throw new \Exception("serverName require");
         }
 
-        if(isset(self::$trace[$serverName]) && !empty(self::$trace[$serverName])){
+        if (isset(self::$trace[$serverName]) && !empty(self::$trace[$serverName])) {
             return self::$trace[$serverName];
         }
 
 
-        if($this->transport == null){
+        if ($this->transport == null) {
             $this->transport = new TransportUdp($agentHostPort);
         }
 
-        if($this->reporter == null) {
+        if ($this->reporter == null) {
             $this->reporter = new RemoteReporter($this->transport);
         }
 
-        if($this->sampler == null){
+        if ($this->sampler == null) {
             $this->sampler = new ConstSampler(true);
         }
 
@@ -92,22 +94,26 @@ class Config {
      * 是否开启
      * @param $disabled
      */
-    public function setDisabled($disabled){
+    public function setDisabled($disabled)
+    {
         self::$disabled = $disabled;
     }
 
 
-    public function setTransport(Transport\Transport $transport){
+    public function setTransport(Transport\Transport $transport)
+    {
         $this->transport = $transport;
     }
 
 
-    public function setReporter(Reporter $reporter){
+    public function setReporter(Reporter $reporter)
+    {
         $this->reporter = $reporter;
     }
 
 
-    public function setSampler(Sampler $sampler){
+    public function setSampler(Sampler $sampler)
+    {
         $this->sampler = $sampler;
     }
 
@@ -115,16 +121,18 @@ class Config {
      * 销毁对象
      * @param $serviceName
      */
-    public function destroyTrace($serverName){
-        if(isset(self::$trace[$serverName])){
+    public function destroyTrace($serverName)
+    {
+        if (isset(self::$trace[$serverName])) {
             unset(self::$trace[$serverName]);
         }
     }
 
 
-    public function flushTrace(){
-        if(count(self::$trace) > 0) {
-            foreach(self::$trace as $trace){
+    public function flushTrace()
+    {
+        if (count(self::$trace) > 0) {
+            foreach (self::$trace as $trace) {
                 $trace->reportSpan();
             }
             $this->reporter->close();

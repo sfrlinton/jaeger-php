@@ -4,7 +4,8 @@ namespace JaegerPhp;
 
 use OpenTracing\SpanContext;
 
-class JSpanContext implements SpanContext{
+class JSpanContext implements SpanContext
+{
     // traceID represents globally unique ID of the trace.
     // Usually generated as a random number.
     public $traceId;
@@ -28,7 +29,8 @@ class JSpanContext implements SpanContext{
     public $debugId;
 
 
-    public function __construct($traceId, $spanId, $parentId, $flags, $baggage = null, $debugId = 0, $obj = null){
+    public function __construct($traceId, $spanId, $parentId, $flags, $baggage = null, $debugId = 0, $obj = null)
+    {
         $this->traceId = $traceId;
         $this->spanId = $spanId;
         $this->parentId = $parentId;
@@ -42,12 +44,14 @@ class JSpanContext implements SpanContext{
 //        return new self($traceId, $spanId, $parentId, $flags, $baggage, $debugId);
 //    }
 
-    public function getBaggageItem($key){
+    public function getBaggageItem($key)
+    {
 
     }
 
 
-    public function withBaggageItem($key, $value){
+    public function withBaggageItem($key, $value)
+    {
 
     }
 
@@ -57,8 +61,9 @@ class JSpanContext implements SpanContext{
     }
 
 
-    public function buildString(){
-        return $this->traceId.':'.$this->spanId.':'.$this->parentId.':'.$this->flags;
+    public function buildString()
+    {
+        return $this->traceId . ':' . $this->spanId . ':' . $this->parentId . ':' . $this->flags;
     }
 
 
@@ -66,7 +71,8 @@ class JSpanContext implements SpanContext{
      * 是否取样
      * @return mixed
      */
-    public function isSampled(){
+    public function isSampled()
+    {
         return $this->flags;
     }
 }
