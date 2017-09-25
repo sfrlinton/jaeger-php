@@ -2,8 +2,9 @@
 
 namespace JaegerPhp;
 
+use Guzzle\Common\Exception\InvalidArgumentException;
 use JaegerPhp\Sampler\Sampler;
-use OpenTracing\SpanReference;
+use OpenTracing\Reference;
 use OpenTracing\SpanContext;
 use OpenTracing\Propagators\Writer;
 use OpenTracing\Propagators\Reader;
@@ -58,14 +59,18 @@ class Jaeger implements Tracer{
     /**
      * init span info
      * @param string $operationName
-     * @param SpanReference|null $parentReference
+     * @param Reference|null $parentReference
      * @param null $startTimestamp
      * @param array $tags
      * @return JSpan
      */
-    public function startSpan($operationName, SpanReference $parentReference = null
+    public function startSpan($operationName, $parentReference = null
         , $startTimestamp = null, array $tags = []
     ){
+        if (!$parentReference instanceof Reference) {
+            throw new InvalidArgumentException();
+        }
+
         $parentSpan = null;
         $spanContext = $parentReference->getContext();
         if($spanContext->traceId){
@@ -85,7 +90,7 @@ class Jaeger implements Tracer{
 
         $span = new JSpan($operationName, $newSpan);
         if(empty($tags)){
-            $span->addTags($tags);
+            $span->setTags($tags);
         }
 
         if($newSpan->isSampled() == 1) {

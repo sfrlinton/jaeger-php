@@ -84,7 +84,6 @@ class Config {
         $trace = new Jaeger($serverName, $this->reporter, $this->sampler);
         self::$trace[$serverName] = $trace;
 
-
         return $trace;
     }
 

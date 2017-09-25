@@ -72,7 +72,7 @@ class JSpan implements Span{
      * @param array $tags
      * @throws SpanAlreadyFinished if the span is already finished
      */
-    public function addTags(array $tags){
+    public function setTags(array $tags){
         $this->tags = array_merge($this->tags, $tags);
     }
 
@@ -90,7 +90,7 @@ class JSpan implements Span{
     }
 
     /**
-     * Adds a baggage item to the SpanContext which is immutable so it is required to use SpanContext::withBaggageItem
+         * Adds a baggage item to the SpanContext which is immutable so it is required to use SpanContext::withBaggageItem
      * to get a new one.
      *
      * @param string $key
@@ -112,13 +112,13 @@ class JSpan implements Span{
 
     public function setIsServer(){
         $this->spanKind = 'server';
-        $this->addTags(['span.kind' => 'server']);
+        $this->setTags(['span.kind' => 'server']);
     }
 
 
     public function setIsClient(){
         $this->spanKind = 'client';
-        $this->addTags(['span.kind' => 'client']);
+        $this->setTags(['span.kind' => 'client']);
     }
 
 

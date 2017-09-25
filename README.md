@@ -14,7 +14,7 @@
   "minimum-stability": "dev",
   "require":           {
     "jukylin/jaeger-php" : "^1.0",
-    "opentracing/opentracing":"1.0-beta1"
+    "opentracing/opentracing":"dev-master"
   }
 }
 ```
@@ -22,39 +22,59 @@
 > composer update
 
 
-## Init Jaeger-php
+##  Server
 
 ```
-$traceConfig = Config::getInstance();
-$trace = $traceConfig->initTrace('example', '0.0.0.0:5775');
+use OpenTracing\GlobalTracer;
+use OpenTracing\Propagator;
+use OpenTracing\Carriers\TextMap;
+use OpenTracing\SpanReference;
+use JaegerPhp\Jaeger;
+
+//init jaeger-php
+$traceObj = new Jaeger("server", $jaegerAgentHost, $jaegerAgentHost);
+GlobalTracer::set($traceObj);
+
+//extract from Superglobal 
+$mapText = array_merge($_REQUEST, $_SERVER);
+$spanContext = $this->traceObj->extract(Propagator::TEXT_MAP, TextMap::create($mapText));
+$parseUrl = parse_url($mapText['REQUEST_URI']);
+//start server span
+$spanObj = $traceObj->startSpan($mapText['REQUEST_METHOD'].' '.$parseUrl['path'], SpanReference::createAsChildOf($spanContext));
+$spanObj->setIsServer();
+//inject to Superglobal
+$traceObj->injectJaeger($spanObj->spanContext, Propagator::TEXT_MAP, $_SERVER);
+
+......
+//business process
+......
+
+//end server span
+$spanObj->finish();
+//send thrift to jaeger-agent
+$traceObj->flush();
 ```
 
-## Extract from Superglobals
+## Client
 
 ```
-$textMap = TextMap::create($_SERVER);
-$spanContext = $trace->extract(Propagator::TEXT_MAP, $textMap);
+$urlArg = [];
+$tracer = GlobalTracer::get();
+$mapText = array_merge($_REQUEST, $_SERVER);
+$spanContext = $tracer->extract(Propagator::TEXT_MAP, TextMap::create($mapText));
+$span = $tracer->startSpan("client", SpanReference::createAsFollowsFrom($spanContext));
+//inject TracerStateHeaderName into $urlArg
+$tracer->injectJaeger($span->spanContext, Propagator::TEXT_MAP, $urlArg);
+
+......
+//business process
+......
+
+$span->finish();
 ```
-
-## Start Span
-
-```
-$serverSpan = $trace->startSpan('example HTTP', SpanReference::createAsChildOf($spanContext));
-
-```
-
-## Inject into Superglobals
-
-```
-$textMap = TextMap::create($_SERVER);
-$clientTrace->inject($clientSapn1->spanContext, Propagator::TEXT_MAP, $textMap);
-$tmp = $textMap->getIterator()->getArrayCopy();
-$_SERVER[\JaegerPhp\Helper::TracerStateHeaderName] = $tmp[\JaegerPhp\Helper::TracerStateHeaderName];
-
-```
-
 
 ## Tags and Log
+
 
 ```
 //can search in Jaeger UI
@@ -64,26 +84,6 @@ $span->addTags(['http.status' => "200"]);
 $span->log(['error' => "HTTP request timeout"]);
 
 ```
-
-## finish span and flush trace 
-
-```
-$span->finish();
-$traceConfig->flushTrace();
-```
-
-##   [more example](https://github.com/jukylin/jaeger-php/tree/master/example) 
-
-## Features
-
-- Transports
-    - via Thrift over UDP
-    
-- Sampling
-    - ConstSampler
-    - ProbabilisticSampler
-
-
 
 ## Reference
 
