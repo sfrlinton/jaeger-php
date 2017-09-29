@@ -6,7 +6,8 @@ use JaegerPhp\Jaeger;
 use JaegerPhp\JSpan;
 use JaegerPhp\Transport\Transport;
 
-class RemoteReporter implements Reporter{
+class RemoteReporter implements Reporter
+{
 
     public $tran = null;
 
@@ -19,7 +20,6 @@ class RemoteReporter implements Reporter{
     {
         $this->tran->append($jaeger);
     }
-
 
     public function close()
     {

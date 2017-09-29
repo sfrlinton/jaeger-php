@@ -2,7 +2,8 @@
 
 namespace JaegerPhp;
 
-class Helper{
+class Helper
+{
 
     const TracerStateHeaderName = 'Uber-Trace-Id';
 
@@ -12,12 +13,14 @@ class Helper{
 
     const SAMPLER_PARAM_TAG_KEY = 'sampler.param';
 
-    public static function microtimeToInt(){
+    public static function microtimeToInt()
+    {
         return intval(microtime(true) * 1000000);
     }
 
 
-    public static function identifier(){
+    public static function identifier()
+    {
         return strrev(microtime(true) * 10000 . rand(1000, 9999));
     }
 
@@ -27,7 +30,8 @@ class Helper{
      * @param $string
      * @return string
      */
-    public static function toHex($string){
+    public static function toHex($string)
+    {
         return sprintf("%x", $string);
     }
 
@@ -38,7 +42,7 @@ class Helper{
      */
     public static function getmicrotime()
     {
-        list($usec, $sec) = explode(" ",microtime());
+        list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }
 }

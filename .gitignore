@@ -2,3 +2,6 @@
 .buildpath
 .project
 .idea
+vendor/
+junit.xml
+results.json

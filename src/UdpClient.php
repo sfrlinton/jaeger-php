@@ -9,26 +9,26 @@ use JaegerPhp\ThriftGen\Agent\AgentClient;
  * Class UdpClient
  * @package JaegerPhp
  */
-
-class UdpClient{
-
+class UdpClient
+{
     private $host = '';
 
     private $post = '';
 
-    public function __construct($hostPost){
+    public function __construct($hostPost)
+    {
         list($this->host, $this->post) = explode(":", $hostPost);
     }
-
 
     /**
      * 发送数据
      * @param $batch
      * @return bool
      */
-    public function EmitBatch($batch){
+    public function EmitBatch($batch)
+    {
         $buildThrift = (new AgentClient())->buildThrift($batch);
-        if(isset($buildThrift['len']) && $buildThrift['len']) {
+        if (isset($buildThrift['len']) && $buildThrift['len']) {
             $len = $buildThrift['len'];
             $enitThrift = $buildThrift['thriftStr'];
             $sock = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
@@ -36,8 +36,9 @@ class UdpClient{
             socket_close($sock);
 
             return true;
-        }else{
-            return false;
         }
+
+        return false;
+
     }
 }

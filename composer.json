@@ -1,23 +1,35 @@
 {
-  "name":              "sfrlinton/jaeger-php",
-  "description":       "php client for jaeger",
-  "keywords":          ["jaeger","trace","opentracing"],
-  "license":           "MIT",
+  "name": "sparefoot/jaeger-php",
+  "description": "php client for jaeger",
+  "keywords": [
+    "jaeger",
+    "trace",
+    "opentracing"
+  ],
+  "license": "MIT",
   "minimum-stability": "dev",
-  "require":           {
+  "require": {
     "php": ">=5.6.0",
-    "packaged/thrift" : "0.10.0",
-    "opentracing/opentracing" : "1.0-beta1"
+    "packaged/thrift": "0.10.0",
+    "opentracing/opentracing": "1.0-beta1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.0"
   },
   "authors": [
     {
       "name": "jukylin",
       "email": "742161455@qq.com"
+    },
+    {
+      "name": "mland",
+      "email": "mland@sparefoot.com"
     }
   ],
-  "autoload":          {
+  "autoload": {
     "psr-4": {
-      "JaegerPhp\\": "src/"
+      "JaegerPhp\\": "src/",
+      "JaegerPhpTest\\": "tests/"
     }
   }
 }

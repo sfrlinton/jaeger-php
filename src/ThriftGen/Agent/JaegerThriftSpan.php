@@ -6,18 +6,18 @@ use JaegerPhp\Jaeger;
 use JaegerPhp\JSpan;
 
 
-class JaegerThriftSpan{
-
-
-    public function buildJaegerProcessThrift(Jaeger $jaeger){
+class JaegerThriftSpan
+{
+    public function buildJaegerProcessThrift(Jaeger $jaeger)
+    {
         $tags = [];
         $ip = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '127.0.0.1';
-        if($ip){
+        if ($ip) {
             $tags['ip'] = $ip;
         }
 
         $port = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : '';
-        if($port){
+        if ($port) {
             $tags['port'] = $port;
         }
         $tags = array_merge($tags, $jaeger->tags);
@@ -30,47 +30,44 @@ class JaegerThriftSpan{
             'tags' => $thriftTags,
         ];
 
-
         return $processThrift;
     }
 
-    public function buildJaegerSpanThrift(JSpan $Jspan){
-
-        $spContext = $Jspan->spanContext;
+    public function buildJaegerSpanThrift(JSpan $Jspan)
+    {
+        $spContext = $Jspan->getContext();
         $span = [
-            'traceIdLow' => hexdec($spContext->traceId),
+            'traceIdLow' => hexdec($spContext->getTraceId()),
             'traceIdHigh' => 0,
-            'spanId' => hexdec($spContext->spanId),
-            'parentSpanId' => hexdec($spContext->parentId),
+            'spanId' => hexdec($spContext->getSpanId()),
+            'parentSpanId' => hexdec($spContext->getParentId()),
             'operationName' => $Jspan->getOperationName(),
-            'flags' => intval($spContext->flags),
-            'startTime' => $Jspan->startTime,
-            'duration' => $Jspan->duration,
-            'tags' => $this->buildTags($Jspan->tags),
-            'logs' => $this->buildLogs($Jspan->logs),
+            'flags' => intval($spContext->getFlags()),
+            'startTime' => $Jspan->getStartTime(),
+            'duration' => $Jspan->getDuration(),
+            'tags' => $this->buildTags($Jspan->getTags()),
+            'logs' => $this->buildLogs($Jspan->getLogs()),
         ];
 
-        if ($spContext->parentId != 0) {
+        if ($spContext->getParentId() != 0) {
             $span['references'] = [
                 [
                     'refType' => 1,
-                    'traceIdLow' => hexdec($spContext->traceId),
+                    'traceIdLow' => hexdec($spContext->getTraceId()),
                     'traceIdHigh' => 0,
-                    'spanId' => hexdec($spContext->parentId),
+                    'spanId' => hexdec($spContext->getParentId()),
                 ],
             ];
         }
 
-
         return $span;
     }
 
-
-
-    private function buildTags($tags){
+    private function buildTags($tags)
+    {
 
         $resultTags = [];
-        if($tags){
+        if ($tags) {
             $tagsObj = Tags::getInstance();
             $tagsObj->setTags($tags);
             $resultTags = $tagsObj->buildTags();
@@ -79,12 +76,12 @@ class JaegerThriftSpan{
         return $resultTags;
     }
 
-
-    private function buildLogs($logs){
+    private function buildLogs($logs)
+    {
         $resultLogs = [];
-        if($logs){
+        if ($logs) {
             $tagsObj = Tags::getInstance();
-            foreach($logs as $log){
+            foreach ($logs as $log) {
                 $tagsObj->setTags($log['fields']);
                 $fields = $tagsObj->buildTags();
                 $resultLogs[] = [

@@ -4,9 +4,11 @@ namespace JaegerPhp\ThriftGen\Agent;
 
 use Thrift\Protocol\TProtocol;
 use Thrift\Type\TType;
+use Thrift\Protocol\TCompactProtocol;
 
-class Process implements TStruct{
-
+class Process implements TStruct
+{
+    /** @var TCompactProtocol */
     public static $tptl = null;
 
     public static $serverName = '';
@@ -23,10 +25,11 @@ class Process implements TStruct{
     }
 
 
-    public function write(TProtocol $t){
+    public function write(TProtocol $t)
+    {
         self::$tptl = $t;
 
-        if(self::$wrote){
+        if (self::$wrote) {
             $tran = self::$tptl->getTransport();
             $tran->write(self::$wrote);
         } else {
@@ -35,12 +38,10 @@ class Process implements TStruct{
 
             $this->handleProcessSName();
             $this->handleProcessTags();
-            
+
             self::$tptl->writeFieldStop();
             self::$tptl->writeStructEnd();
         }
-
-
     }
 
 
@@ -56,7 +57,7 @@ class Process implements TStruct{
 
     public function handleProcessTags()
     {
-        if(count(self::$thriftTags) > 0) {
+        if (count(self::$thriftTags) > 0) {
             self::$tptl->writeFieldBegin("tags", TType::LST, 2);
             self::$tptl->writeListBegin(TType::STRUCT, count(self::$thriftTags));
 
@@ -69,6 +70,7 @@ class Process implements TStruct{
         }
     }
 
-
-    public function read(TProtocol $t){}
+    public function read(TProtocol $t)
+    {
+    }
 }

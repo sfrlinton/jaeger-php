@@ -10,7 +10,7 @@ use JaegerPhp\ThriftGen\Agent\Types;
 
 class AgentClient
 {
-
+    /** @var TCompactProtocol */
     public static $tptl = null;
 
     public function buildThrift($batch)
@@ -32,7 +32,6 @@ class AgentClient
         return ['len' => $batchLen, 'thriftStr' => $batchThriftStr];
     }
 
-
     public function handleBatch($batch)
     {
         self::$tptl->writeFieldBegin("batch", TType::STRUCT, 1);
@@ -47,14 +46,13 @@ class AgentClient
         self::$tptl->writeFieldEnd();
     }
 
-
     public function handleThriftSpans($thriftSpans)
     {
         self::$tptl->writeFieldBegin("spans", TType::LST, 2);
         self::$tptl->writeListBegin(TType::STRUCT, count($thriftSpans));
 
         $agentSpan = Span::getInstance();
-        foreach ($thriftSpans as $thriftSpan){
+        foreach ($thriftSpans as $thriftSpan) {
             $agentSpan->setThriftSpan($thriftSpan);
             $agentSpan->write(self::$tptl);
         }
@@ -63,7 +61,6 @@ class AgentClient
         self::$tptl->writeFieldEnd();
     }
 
-
     public function handleThriftProcess($thriftProcess)
     {
         self::$tptl->writeFieldBegin("process", TType::STRUCT, 1);
@@ -71,6 +68,4 @@ class AgentClient
         self::$tptl->writeFieldEnd();
     }
 
-
 }
-?>

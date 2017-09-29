@@ -5,26 +5,27 @@ namespace JaegerPhp;
 use OpenTracing\Span;
 use OpenTracing\SpanContext;
 
-class JSpan implements Span{
-
+class JSpan implements Span
+{
     private $operationName = '';
 
-    public $startTime = '';
+    protected $startTime = '';
 
-    public $finishTime = '';
+    protected $finishTime = '';
 
-    public $spanKind = '';
+    protected $spanKind = '';
 
-    public $spanContext = null;
+    /** @var null|JSpanContext  */
+    protected $spanContext = null;
 
-    public $duration = 0;
+    protected $duration = 0;
 
-    public $logs = [];
+    protected $logs = [];
 
-    public $tags = [];
+    protected $tags = [];
 
-
-    public function __construct($operationName, SpanContext $spanContext){
+    public function __construct($operationName, SpanContext $spanContext)
+    {
         $this->setIsClient();
         $this->operationName = $operationName;
         $this->startTime = Helper::microtimeToInt();
@@ -34,14 +35,16 @@ class JSpan implements Span{
     /**
      * @return string
      */
-    public function getOperationName(){
+    public function getOperationName()
+    {
         return $this->operationName;
     }
 
     /**
-     * @return SpanContext
+     * @return JSpanContext
      */
-    public function getContext(){
+    public function getContext()
+    {
         return $this->spanContext;
     }
 
@@ -49,9 +52,9 @@ class JSpan implements Span{
      * @param float|int|\DateTimeInterface|null $finishTime if passing float or int
      * it should represent the timestamp (including as many decimal places as you need)
      * @param array $logRecords
-     * @return mixed
      */
-    public function finish($finishTime = null, array $logRecords = []){
+    public function finish($finishTime = null, array $logRecords = [])
+    {
         $this->finishTime = $finishTime == null ? Helper::microtimeToInt() : $finishTime;
         $this->duration = $this->finishTime - $this->startTime;
     }
@@ -59,7 +62,8 @@ class JSpan implements Span{
     /**
      * @param string $newOperationName
      */
-    public function overwriteOperationName($newOperationName){
+    public function overwriteOperationName($newOperationName)
+    {
         $this->operationName = $newOperationName;
     }
 
@@ -72,7 +76,8 @@ class JSpan implements Span{
      * @param array $tags
      * @throws SpanAlreadyFinished if the span is already finished
      */
-    public function setTags(array $tags){
+    public function setTags(array $tags)
+    {
         $this->tags = array_merge($this->tags, $tags);
     }
 
@@ -83,21 +88,23 @@ class JSpan implements Span{
      * @param int|float|\DateTimeInterface $timestamp
      * @throws SpanAlreadyFinished if the span is already finished
      */
-    public function log(array $fields = [], $timestamp = null){
+    public function log(array $fields = [], $timestamp = null)
+    {
         $log['timestamp'] = $timestamp ? $timestamp : Helper::microtimeToInt();
         $log['fields'] = $fields;
         $this->logs[] = $log;
     }
 
     /**
-         * Adds a baggage item to the SpanContext which is immutable so it is required to use SpanContext::withBaggageItem
+     * Adds a baggage item to the SpanContext which is immutable so it is required to use SpanContext::withBaggageItem
      * to get a new one.
      *
      * @param string $key
      * @param string $value
      * @throws SpanAlreadyFinished if the span is already finished
      */
-    public function addBaggageItem($key, $value){
+    public function addBaggageItem($key, $value)
+    {
 
     }
 
@@ -105,36 +112,97 @@ class JSpan implements Span{
      * @param string $key
      * @return string
      */
-    public function getBaggageItem($key){
+    public function getBaggageItem($key)
+    {
 
     }
 
-
-    public function setIsServer(){
+    public function setIsServer()
+    {
         $this->spanKind = 'server';
         $this->setTags(['span.kind' => 'server']);
     }
 
 
-    public function setIsClient(){
+    public function setIsClient()
+    {
         $this->spanKind = 'client';
         $this->setTags(['span.kind' => 'client']);
     }
 
 
-    public function isRPC(){
-        if($this->spanKind == 'server'
-            || $this->spanKind == 'client'){
+    public function isRPC()
+    {
+        if ($this->spanKind === 'server'
+            || $this->spanKind === 'client') {
             return true;
         }
         return false;
     }
 
 
-    public function isRPClient(){
-        if($this->spanKind == 'client'){
+    public function isRPClient()
+    {
+        if ($this->spanKind === 'client') {
             return true;
         }
         return false;
     }
+
+    /**
+     * @return int|string
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinishTime()
+    {
+        return $this->finishTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpanKind()
+    {
+        return $this->spanKind;
+    }
+
+    /**
+     * @return JSpanContext|null
+     */
+    public function getSpanContext()
+    {
+        return $this->spanContext;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
 }
