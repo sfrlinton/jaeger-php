@@ -42,6 +42,7 @@ class Jaeger implements Tracer
 
         $this->sampler = $sampler;
         $this->setTags($this->sampler->getTags());
+        $this->setTags($this->getEnvTags());
 
         if ($serverName == '') {
             $this->serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'unknown server';
@@ -50,9 +51,11 @@ class Jaeger implements Tracer
         }
     }
 
-    public function setTags(array $tags = [])
-    {
-        $this->tags = array_merge($this->tags, $tags);
+
+/**
+     * @param array $tags  key => value
+     */    public function setTags(array $tags = []){
+        if(!empty($tags)) {$this->tags = array_merge($this->tags, $tags);}
     }
 
     /**
@@ -155,6 +158,21 @@ class Jaeger implements Tracer
             $this->reporter->report($this);
         }
     }
+
+
+    public function getEnvTags(){
+        $tags = [];
+        if(isset($_SERVER['JAEGER_TAGS']) && $_SERVER['JAEGER_TAGS'] != ''){
+            $envTags = explode(',', $_SERVER['JAEGER_TAGS']);
+            foreach ($envTags as $envK => $envTag){
+                list($key, $value) = explode('=', $envTag);
+                $tags[$key] = $value;
+            }
+        }
+
+        return $tags;
+    }
+
 
     /**
      * 结束,发送信息到jaeger
