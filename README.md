@@ -90,3 +90,8 @@ $span->log(['error' => "HTTP request timeout"]);
 [OpenTracing](http://opentracing.io/)
 
 [Jaeger](https://uber.github.io/jaeger/)
+
+## Testing
+
+- start jaeger server on localhost
+- `./vendor/bin/phpunit`
