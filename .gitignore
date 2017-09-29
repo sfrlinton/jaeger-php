@@ -5,3 +5,4 @@
 vendor/
 junit.xml
 results.json
+composer.phar

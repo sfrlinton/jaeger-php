@@ -70,8 +70,10 @@ class Jaeger implements Tracer
      * @param array $tags
      * @return JSpan
      */
-    public function startSpan($operationName, $parentReference = null
-        , $startTimestamp = null, array $tags = []
+    public function startSpan($operationName,
+                              $parentReference = null,
+                              $startTimestamp = null,
+                              array $tags = []
     )
     {
         if (!$parentReference instanceof Reference) {
@@ -92,8 +94,8 @@ class Jaeger implements Tracer
             $flags = $this->sampler->IsSampled();
             $newSpan = new JSpanContext($traceId, $spanId, 0, $flags, null, 0);
         } else {
-            $newSpan = new JSpanContext($parentSpan->getTraceId(), Helper::toHex(Helper::identifier())
-                , $parentSpan->getSpanId(), $parentSpan->getFlags(), null, 0);
+            $newSpan = new JSpanContext($parentSpan->getTraceId(), Helper::toHex(Helper::identifier()),
+                $parentSpan->getSpanId(), $parentSpan->getFlags(), null, 0);
         }
 
         $span = new JSpan($operationName, $newSpan);

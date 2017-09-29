@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2f75660aedf1acb611d03ef89444b293",
-    "content-hash": "d97142c7ecbb79fed544965c4428842e",
+    "hash": "cfeda6cbc193d0bc1bd53e3c81aa69fb",
+    "content-hash": "fbcd9aa2068365d1e1ae39476cc3e15b",
     "packages": [
         {
             "name": "opentracing/opentracing",
-            "version": "1.0-beta1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opentracing/opentracing-php.git",
-                "reference": "f47892b1247e6bc9b23b7c6ef6bc393816ff9e1c"
+                "reference": "12405c2ed7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opentracing/opentracing-php/zipball/f47892b1247e6bc9b23b7c6ef6bc393816ff9e1c",
-                "reference": "f47892b1247e6bc9b23b7c6ef6bc393816ff9e1c",
+                "url": "https://api.github.com/repos/opentracing/opentracing-php/zipball/12405c2ed7c",
+                "reference": "12405c2ed7c",
                 "shasum": ""
             },
             "require": {
@@ -50,7 +50,7 @@
                 }
             ],
             "description": "OpenTracing API for PHP",
-            "time": "2017-08-18 07:55:34"
+            "time": "2017-09-28 17:54:51"
         },
         {
             "name": "packaged/thrift",
@@ -1154,12 +1154,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "eaa08afe947cb5affdf2b5fd39e7de92bd96c872"
+                "reference": "50c33cf46180f07d75cbec473cdcacacc316b266"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/eaa08afe947cb5affdf2b5fd39e7de92bd96c872",
-                "reference": "eaa08afe947cb5affdf2b5fd39e7de92bd96c872",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/50c33cf46180f07d75cbec473cdcacacc316b266",
+                "reference": "50c33cf46180f07d75cbec473cdcacacc316b266",
                 "shasum": ""
             },
             "require": {
@@ -1204,7 +1204,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-09-25 19:23:20"
+            "time": "2017-09-29 11:19:35"
         },
         {
             "name": "webmozart/assert",
@@ -1259,7 +1259,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "opentracing/opentracing": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
