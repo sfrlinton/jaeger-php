@@ -166,7 +166,7 @@ class Jaeger implements Tracer
     public function getEnvTags()
     {
         $tags = [];
-        if (isset($_SERVER['JAEGER_TAGS']) && $_SERVER['JAEGER_TAGS'] != '') {
+        if (isset($_SERVER['JAEGER_TAGS']) && $_SERVER['JAEGER_TAGS']) {
             $envTags = explode(',', $_SERVER['JAEGER_TAGS']);
             foreach ($envTags as $envK => $envTag) {
                 list($key, $value) = explode('=', $envTag);
