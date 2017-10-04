@@ -60,12 +60,11 @@ class SimpleTracer {
             if ($debugTrace) {
                 throw $e;
             }
-            error_log('Trace failed'.$e->getMessage());
         }
     }
 
-    public function createSpan($spanLabel, $tags, $parentSpan = NULL) {
-        if (count($this->tracer->getSpans()[0]) < 1) {
+    public function createSpan($spanLabel, $parentSpan = NULL, $tags = []) {
+        if (count($this->tracer->getSpans()) < 1) {
             //no root span, not sampling
             return $this->tracer->startSpan($spanLabel, Reference::create(Reference::CHILD_OF, new JSpanContext(0, 0, 0, 0, null, 0)));
         }
