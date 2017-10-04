@@ -5,7 +5,7 @@ namespace JaegerPhp;
 class Helper
 {
 
-    const TracerStateHeaderName = 'Uber-Trace-Id';
+    const TracerStateHeaderName = 'uber-trace-id';
 
     const UDP_PACKET_MAX_LENGTH = 65000;
 
