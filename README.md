@@ -105,3 +105,25 @@ $span->log(['error' => "HTTP request timeout"]);
 Run the tests
 
     ./vendor/bin/phpunit
+
+An autoflushing tracer and span usage:
+
+    $tracer = new SimpleTracer(
+        'server.com',
+        'root span name',
+        '0.0.0.0:5775',
+        $_SERVER,
+        TRUE
+    );
+
+    $span1 = $tracer->createSpan('span1');
+
+    $childOfSpan1 = $tracer->createSpan('childOfSpan1', [...tags...], $span1);
+
+    ...
+
+    $tracer->finishSpan($childOfSpan1, [...tags..]);
+
+    ...
+
+    $tracer->finishSpan($span1, [...tags..]);
